@@ -39,6 +39,12 @@
               <button id="sendButton" type="button" class="btn btn-warning my-2 w-100">Send</button>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12">
+              <label for="usernameColorPicker" class="text-white">Your name color</label>
+              <input id="usernameColorPicker" type="color" class="rounded"> <br>
+            </div>
+          </div>
         </div>
       </div>
       <div class="col-md-7 p-2">
@@ -50,53 +56,6 @@
 
   <script src="bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
   <script src="js/signalr/signalr.min.js" charset="utf-8"></script>
-  <script type="text/javascript">
-    const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:44392/chat")
-    .build();
-
-    function receiveMessage(username, message) {
-      appendMessage(username, message);
-    }
-
-    function sendMessage(event) {
-      let username = document.getElementById("usernameField").value;
-      let message = document.getElementById("messageField").value;
-
-      if (isEmpty(username)) {
-        alert("Please, set username");
-        return;
-      }
-
-      if (isEmpty(message)) {
-        alert("Please, set message");
-        return;
-      }
-
-      appendMessage("You", message);
-
-      connection.invoke("SendMessage", username, message);
-    }
-
-    function appendMessage(username, message) {
-      let messagesBox = document.getElementById("messages");
-
-      let element = document.createElement("p");
-      element.appendChild(document.createTextNode(`${username}: ${message}`));
-
-      let firstElement = messagesBox.firstChild;
-      messagesBox.insertBefore(element, firstElement);
-    }
-
-    function isEmpty(str) {
-      return str.length == 0;
-    }
-
-    document.getElementById("sendButton").addEventListener("click", sendMessage);
-
-    connection.on("ReceiveMessage", receiveMessage);
-
-    connection.start();
-  </script>
+  <script src="js/script.js" charset="utf-8"></script>
 </body>
 </html>

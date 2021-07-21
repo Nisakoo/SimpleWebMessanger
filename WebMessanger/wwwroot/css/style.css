@@ -8,6 +8,10 @@ body {
   height: 300px;
 }
 
+.username {
+  font-weight: bold;
+}
+
 #messageField {
   resize: none;
 }
