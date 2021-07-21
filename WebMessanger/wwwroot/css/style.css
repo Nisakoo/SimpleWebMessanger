@@ -5,8 +5,7 @@ body {
 .messages {
   background-color: white;
   overflow-y: scroll;
-  min-height: 300px;
-  max-height: 300px;
+  height: 300px;
 }
 
 #messageField {
