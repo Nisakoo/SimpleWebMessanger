@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru" dir="ltr">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <title>Messanger</title>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-5">
+        <div class="form p-2">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="my-2">
+                <input id="usernameField" type="text" class="form-control rounded" placeholder="Username" aria-label="Username" aria-describedby="username">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="my-2">
+                <textarea id="messageField" type="text" class="form-control rounded" rows="8" placeholder="Your message" aria-label="Message" aria-describedby="message"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button id="sendButton" type="button" class="btn btn-warning my-2 w-100">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7 p-2">
+        <div id="messages" class="messages border border-warning rounded px-2 my-2">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+  <script src="js/signalr/signalr.min.js" charset="utf-8"></script>
+  <script type="text/javascript">
+    const connection = new signalR.HubConnectionBuilder()
+    .withUrl("https://localhost:44392/chat")
+    .build();
+
+    function receiveMessage(username, message) {
+      appendMessage(username, message);
+    }
+
+    function sendMessage(event) {
+      let username = document.getElementById("usernameField").value;
+      let message = document.getElementById("messageField").value;
+
+      if (isEmpty(username)) {
+        alert("Please, set username");
+        return;
+      }
+
+      if (isEmpty(message)) {
+        alert("Please, set message");
+        return;
+      }
+
+      appendMessage("You", message);
+
+      connection.invoke("SendMessage", username, message);
+    }
+
+    function appendMessage(username, message) {
+      let messagesBox = document.getElementById("messages");
+
+      let element = document.createElement("p");
+      element.appendChild(document.createTextNode(`${username}: ${message}`));
+
+      let firstElement = messagesBox.firstChild;
+      messagesBox.insertBefore(element, firstElement);
+    }
+
+    function isEmpty(str) {
+      return str.length == 0;
+    }
+
+    document.getElementById("sendButton").addEventListener("click", sendMessage);
+
+    connection.on("ReceiveMessage", receiveMessage);
+
+    connection.start();
+  </script>
+</body>
+</html>
