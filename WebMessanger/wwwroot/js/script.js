@@ -62,10 +62,21 @@ function getUserNameColor() {
   return usernameColor;
 }
 
+function getRandomColor() {
+  let values = new Array(6);
+
+  for (let i = 0; i < 6; i++) {
+    values[i] = Math.floor(Math.random() * 16).toString(16);
+  }
+
+  return `#${values.join("")}`;
+}
+
 function isEmpty(str) {
   return str.length == 0;
 }
 
+document.getElementById("usernameColorPicker").value = getRandomColor();
 document.getElementById("sendButton").addEventListener("click", sendMessage);
 
 connection.on("ReceiveMessage", receiveMessage);
